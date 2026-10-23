@@ -1,0 +1,33 @@
+{
+    "model_type": "RandomForestClassifier",
+    "n_estimators": 100,
+    "random_state": 42,
+    "dataset": "data\\ml_ready_dataset.csv",
+    "features": [
+        "endpoint_a_port",
+        "endpoint_b_port",
+        "packet_count",
+        "forward_packets",
+        "backward_packets",
+        "total_bytes",
+        "forward_bytes",
+        "backward_bytes",
+        "duration",
+        "packets_per_second",
+        "bytes_per_second",
+        "syn_count",
+        "ack_count",
+        "fin_count",
+        "rst_count",
+        "protocol_1",
+        "protocol_TCP",
+        "protocol_UDP"
+    ],
+    "classes": [
+        0,
+        1
+    ],
+    "threshold": 0.5,
+    "training_samples": 472,
+    "testing_samples": 119
+}

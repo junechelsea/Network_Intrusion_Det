@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Network Intrusion Detection System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #1f2937;
+            margin: 0;
+            padding: 28px;
+        }
+        h1 { margin-bottom: 6px; }
+        .subtitle { color: #64748b; margin-bottom: 24px; }
+        .cards {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 2px 8px #0000000a;
+        }
+        .number { font-size: 30px; font-weight: bold; margin-top: 8px; }
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+        th { background: #f8fafc; }
+        .scan { color: #b91c1c; font-weight: bold; }
+        .normal { color: #15803d; font-weight: bold; }
+        .severity { color: #b45309; font-weight: bold; }
+        .empty { color: #64748b; padding: 16px 0; }
+    </style>
+</head>
+<body>
+    <h1>Network Intrusion Detection System</h1>
+    <p class="subtitle">Machine-learning traffic monitoring · Kenya time (EAT)</p>
+
+    <div class="cards">
+        <div class="card">
+            Total recent flows
+            <div class="number">{{ total_flows }}</div>
+        </div>
+        <div class="card">
+            Suspected scans
+            <div class="number">{{ scan_count }}</div>
+        </div>
+        <div class="card">
+            Recent alerts
+            <div class="number">{{ total_alerts }}</div>
+        </div>
+    </div>
+
+    <section class="panel">
+        <h2>Recent Network Flows</h2>
+        {% if flows %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Time (EAT)</th>
+                    <th>Source IP</th>
+                    <th>Destination IP</th>
+                    <th>Protocol</th>
+                    <th>Packets</th>
+                    <th>Bytes</th>
+                    <th>Prediction</th>
+                    <th>Confidence</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for flow in flows %}
+                <tr>
+                    <td>{{ flow.local_time }}</td>
+                    <td>{{ flow.source_ip }}</td>
+                    <td>{{ flow.destination_ip }}</td>
+                    <td>{{ flow.protocol }}</td>
+                    <td>{{ flow.packet_count }}</td>
+                    <td>{{ flow.total_bytes }}</td>
+                    <td class="{{ 'scan' if flow.prediction == 'SCAN' else 'normal' }}">
+                        {{ flow.prediction }}
+                    </td>
+                    <td>{{ "%.1f"|format(flow.confidence * 100) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty">No network flows recorded yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="panel">
+        <h2>Security Alerts</h2>
+        {% if alerts %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Time (EAT)</th>
+                    <th>Alert Type</th>
+                    <th>Severity</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in alerts %}
+                <tr>
+                    <td>{{ alert.local_time }}</td>
+                    <td>{{ alert.alert_type }}</td>
+                    <td class="severity">{{ alert.severity }}</td>
+                    <td>{{ alert.message }}</td>
+                    <td>{{ alert.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty">No security alerts recorded yet.</p>
+        {% endif %}
+    </section>
+</body>
+</html>
